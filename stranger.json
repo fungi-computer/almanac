@@ -1,0 +1,57 @@
+{
+  "expectedTarballFiles": [
+    "package/LICENSE",
+    "package/README.md",
+    "package/dist/index.d.ts",
+    "package/dist/index.js",
+    "package/docs/api/README.md",
+    "package/examples/next-occurrence.mjs",
+    "package/package.json"
+  ],
+  "runtimeFixture": "test/stranger/runtime.mjs",
+  "typecheckFixture": "test/stranger/consumer.mts",
+  "docs": {
+    "sigil": "run",
+    "home": {
+      "lead": "Almanac is a pure schedule core for host authors. Most people want Oyster to run Apps or Shiitake to run Agents.",
+      "example": {
+        "file": "home.ts",
+        "title": "Find the next occurrence",
+        "caption": "Compute the next UTC occurrence. Your host owns the timer, storage and work."
+      },
+      "ladder": {
+        "start": [
+          {
+            "title": "Quickstart",
+            "href": "/quickstart/",
+            "description": "Install Almanac and run its shipped schedule example."
+          },
+          {
+            "title": "Core concepts",
+            "href": "/concepts/#core-concepts",
+            "description": "Cadence, occurrence identity and missed-tick policy."
+          }
+        ],
+        "tasks": [
+          {
+            "title": "Run the example",
+            "href": "/examples/",
+            "description": "Compute a cron occurrence with the public root export."
+          }
+        ],
+        "reference": [
+          {
+            "title": "API reference",
+            "href": "/api/",
+            "description": "Schedule records, transitions and typed errors."
+          },
+          {
+            "title": "Status and limits",
+            "href": "/status/",
+            "description": "Runtime requirements, host responsibilities and license."
+          }
+        ]
+      }
+    }
+  }
+}
