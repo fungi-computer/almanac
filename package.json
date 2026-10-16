@@ -1,6 +1,7 @@
 {
   "name": "@fungi.computer/almanac",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "author": "Levi <levi@technomancy.dev>",
   "private": false,
   "type": "module",
   "description": "Target-agnostic durable schedule core: cron cadence, occurrence identity, missed-tick and retry policy",
