@@ -11,7 +11,7 @@
   "runtimeFixture": "test/stranger/runtime.mjs",
   "typecheckFixture": "test/stranger/consumer.mts",
   "docs": {
-    "sigil": "run",
+    "sigil": "schedule",
     "home": {
       "lead": "Almanac is a pure schedule core for host authors. Most people want Oyster to run Apps or Shiitake to run Agents.",
       "example": {
