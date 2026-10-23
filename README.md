@@ -1,11 +1,9 @@
 # Almanac
 
-Most people want
-[Oyster](https://docs.fungi.computer/reference/packages/#oyster) to run their
-Apps or [Shiitake](https://docs.fungi.computer/reference/packages/#shiitake) to
-run their Agents. Almanac gives host authors a pure schedule core for cron
-cadences, occurrence identity and retries. The host owns storage, its timer and
-what a firing does.
+Most people want [Oyster](https://docs.fungi.computer/oyster/) to run their Apps
+or [Shiitake](https://docs.fungi.computer/shiitake/) to run their Agents.
+Almanac gives host authors a pure schedule core for cron cadences, occurrence
+identity and retries. The host owns storage, its timer and what a firing does.
 
 ## Quickstart
 
@@ -66,6 +64,14 @@ Transitions return a new record. Nothing starts a timer or writes storage.
   schedules are never due.
 
 See the [API reference](docs/api/README.md) for the complete root export.
+
+## Shared backoff
+
+`BackoffDelay` fixes the pure `(attempt, policy) => delayMs` contract, reusing
+`RetryPolicy`. Attempt one (and attempts below one) uses the initial delay,
+bounded by the cap; later attempts double up to that cap. The caller supplies
+its own policy, and the calculation owns no clock, storage or retry execution.
+`afterRefused` uses this calculation after incrementing the refusal attempt.
 
 ## Maintainer checks
 

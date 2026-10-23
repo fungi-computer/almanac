@@ -76,7 +76,32 @@ type RetryPolicy = Readonly<{
 }>;
 ```
 
-Initial and maximum delays for exponential admission retries.
+Initial and maximum delays for exponential retries.
+
+---
+
+### BackoffDelay
+
+```ts
+type BackoffDelay = (attempt, policy) => number;
+```
+
+Pure retry-delay port shared by schedule and delivery owners.
+
+Attempt one uses `baseMs`, capped by `maxMs`; zero and negative attempts retain
+that same first-delay convention. Later attempts double up to the cap. The owner
+supplies its policy; this port reads no clock or durable state.
+
+#### Parameters
+
+| Parameter | Type                          |
+| --------- | ----------------------------- |
+| `attempt` | `number`                      |
+| `policy`  | [`RetryPolicy`](#retrypolicy) |
+
+#### Returns
+
+`number`
 
 ---
 
@@ -92,6 +117,16 @@ type CadenceError = Readonly<{
 Why the next occurrence could not be computed.
 
 ## Variables
+
+### backoffDelay
+
+```ts
+const backoffDelay: BackoffDelay;
+```
+
+Bounded exponential delay shared by schedule and delivery owners.
+
+---
 
 ### defaultRetryPolicy
 

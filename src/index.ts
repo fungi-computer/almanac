@@ -43,13 +43,32 @@ export type Refusal<S extends ScheduleCore> = Readonly<{
   retryAt: number;
 }>;
 
-/** Initial and maximum delays for exponential admission retries. */
+/** Initial and maximum delays for exponential retries. */
 export type RetryPolicy = Readonly<{
-  /** Delay in milliseconds after the first refused admission. */
+  /** Initial delay in milliseconds, used for attempt one. */
   baseMs: number;
   /** Maximum retry delay in milliseconds. */
   maxMs: number;
 }>;
+
+/**
+ * Pure retry-delay port shared by schedule and delivery owners.
+ *
+ * Attempt one uses `baseMs`, capped by `maxMs`; zero and negative attempts
+ * retain that same first-delay convention. Later attempts double up to the cap.
+ * The owner supplies its policy; this port reads no clock or durable state.
+ */
+export type BackoffDelay = (attempt: number, policy: RetryPolicy) => number;
+
+/**
+ * Bounded exponential delay shared by schedule and delivery owners.
+ */
+export const backoffDelay: BackoffDelay = (attempt, policy) =>
+  Math.min(
+    // Zero remains zero even when the exponential factor would overflow.
+    policy.baseMs === 0 ? 0 : policy.baseMs * 2 ** Math.max(0, attempt - 1),
+    policy.maxMs,
+  );
 
 /** Default backoff: 30 s doubling to at most an hour. */
 export const defaultRetryPolicy: RetryPolicy = {
@@ -148,9 +167,7 @@ export function afterRefused<S extends ScheduleCore>(
   const attempt = schedule.attempt + 1;
   return {
     schedule: { ...schedule, attempt, lastError: reason },
-    retryAt:
-      now +
-      Math.min(policy.baseMs * 2 ** Math.max(0, attempt - 1), policy.maxMs),
+    retryAt: now + backoffDelay(attempt, policy),
   };
 }
 

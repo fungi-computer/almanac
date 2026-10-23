@@ -111,10 +111,26 @@ describe("occurrences", () => {
       schedule: { attempt: 1, lastError: "member lost access" },
       retryAt: 31_000,
     });
+    expect(occurrenceKey(first.schedule)).toBe(occurrenceKey(recurring(0)));
+    const second = afterRefused(first.schedule, 1_000, "still refused");
+    expect(second).toMatchObject({
+      schedule: { attempt: 2, lastError: "still refused" },
+      retryAt: 61_000,
+    });
     let schedule = first.schedule;
     for (let index = 0; index < 20; index++)
       schedule = afterRefused(schedule, 0, "still refused").schedule;
     expect(afterRefused(schedule, 0, "x").retryAt).toBe(hour);
+    const largeAttempt = afterRefused(
+      { ...schedule, attempt: 10_000 },
+      0,
+      "still refused",
+    );
+    expect(largeAttempt).toMatchObject({
+      schedule: { attempt: 10_001, lastError: "still refused" },
+      retryAt: hour,
+    });
+    expect(occurrenceKey(largeAttempt.schedule)).toBe(occurrenceKey(schedule));
     expect(afterAdmitted(schedule, 0)).toMatchObject({
       attempt: 0,
       lastError: null,
