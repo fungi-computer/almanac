@@ -1,5 +1,13 @@
 # @fungi.computer/almanac
 
+## 0.2.1
+
+### Patch Changes
+
+- Changes since 0.2.0:
+
+  - fix(turbo): lint waits for the package's own build
+
 ## 0.2.0
 
 ### Minor Changes
