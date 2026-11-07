@@ -54,9 +54,10 @@ Transitions return a new record. Nothing starts a timer or writes storage.
 - `occurrenceKey(schedule)` is `id:nextDueAt`. A retried firing of the same
   occurrence has the same key, so the host can admit that occurrence
   idempotently.
-- Missed ticks coalesce. After a firing, and on resume, the next occurrence is
-  computed from now, so a schedule that was down or paused runs once, not a
-  backlog.
+- Missed recurring ticks coalesce. After an overdue occurrence is admitted, the
+  next occurrence is computed from now, without replaying a backlog. Resuming a
+  paused recurring schedule skips missed occurrences and waits for the next one
+  after now. Resuming a one-shot preserves its original due time.
 - `afterAdmitted` finishes a one-shot or moves a recurring schedule on (pausing
   it with the reason if its cadence is exhausted). `afterRefused` keeps the same
   occurrence, records why and backs off (30 s doubling to 1 h by default).
