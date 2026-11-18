@@ -1,11 +1,17 @@
 # Almanac
 
-Most people want [Oyster](https://docs.fungi.computer/oyster/) to run their Apps
-or [Shiitake](https://docs.fungi.computer/shiitake/) to run their Agents.
-Almanac gives host authors a pure schedule core for cron cadences, occurrence
-identity and retries. The host owns storage, its timer and what a firing does.
+Almanac works out when a scheduled job should run next, from a cron expression
+and a time zone, and decides what happens on retries and missed runs. You supply
+the timer and the storage.
 
-## Quickstart
+```mermaid
+flowchart LR
+  Host[Your host and timer] -->|cron + time zone| Almanac
+  Almanac -->|next due time| Host
+  Host -->|fires, or refuses| Almanac
+```
+
+## Quick start
 
 Use Node 24 or later. Install the package and run its shipped example:
 
@@ -34,6 +40,36 @@ const next = nextOccurrence(
 if (Result.isFailure(next)) throw new Error(next.failure.message);
 console.log(new Date(next.success).toISOString());
 ```
+
+## Common tasks
+
+### Find the next run time
+
+Pass a cron expression, a time zone and a start time to `nextOccurrence`, as in
+the Quick start.
+
+### Retry a refused firing
+
+`afterRefused` keeps the same occurrence and backs off from 30 seconds up to an
+hour. See [Core concepts](#core-concepts).
+
+### Pause, resume or cancel a schedule
+
+`paused`, `resumed` and `cancelled` return a new record and never start a timer.
+[Core concepts](#core-concepts) explains how missed ticks are handled.
+
+### Use it in a browser
+
+The same package runs in a browser bundle. See Examples.
+
+## Reference
+
+### Overview
+
+Most people want [Oyster](https://docs.fungi.computer/oyster/) to run their Apps
+or [Shiitake](https://docs.fungi.computer/shiitake/) to run their Agents.
+Almanac gives host authors a pure schedule core for cron cadences, occurrence
+identity and retries. The host owns storage, its timer and what a firing does.
 
 ## Examples
 
